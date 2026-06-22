@@ -2,3 +2,13 @@ hdbcli==2.17.*
 hana-ml
 cfenv==0.5.3
 python-dotenv
+pandas
+openpyxl                   # Excel support (.xlsx)
+langchain~=0.3.25
+langchain-core~=0.3.25
+langchain-community~=0.3.25
+langchain-openai>=0.3.7
+sap-ai-sdk-gen             # SAP Gen AI Hub proxy
+pypdf                      # PDF loading
+beautifulsoup4             # URL/web page loading
+requests
