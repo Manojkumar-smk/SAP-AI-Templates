@@ -1,0 +1,10 @@
+# Install all dependencies:
+#   pip install -r requirements.txt
+
+hdbcli==2.17.*            # HANA raw SQL connection
+python-dotenv             # .env file loading
+
+# OpenAI direct (replaces sap-ai-sdk-gen)
+langchain~=0.3.25
+langchain-core~=0.3.25
+langchain-openai>=0.3.7   # pip install langchain-openai
