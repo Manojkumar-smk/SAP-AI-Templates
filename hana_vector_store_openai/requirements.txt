@@ -1,0 +1,17 @@
+# Install all dependencies:
+#   pip install -r requirements.txt
+
+hdbcli==2.17.*            # HANA raw SQL connection
+python-dotenv             # .env file loading
+pandas                    # CSV / Excel loading
+openpyxl                  # Excel .xlsx support
+
+# OpenAI direct (replaces sap-ai-sdk-gen)
+langchain~=0.3.25
+langchain-core~=0.3.25
+langchain-community~=0.3.25
+langchain-openai>=0.3.7   # pip install langchain-openai
+
+pypdf                     # PDF loading
+beautifulsoup4            # URL / web page loading
+requests
