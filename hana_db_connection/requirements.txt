@@ -1,0 +1,7 @@
+# Install all dependencies:
+#   pip install -r requirements.txt
+
+hdbcli==2.17.*        # raw SQL / cursor (connect_env, connect_btp_cf, health_check)
+hana-ml               # DataFrame / ML / PAL (connect_hana_ml)
+python-dotenv         # .env file loading (connect_env, connect_hana_ml)
+cfenv==0.5.3          # VCAP_SERVICES parsing (connect_btp_cf)
