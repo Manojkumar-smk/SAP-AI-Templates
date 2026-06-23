@@ -1,0 +1,19 @@
+# Install all dependencies:
+#   pip install -r requirements.txt
+
+streamlit>=1.35.0         # Streamlit UI
+hdbcli==2.17.*            # HANA raw SQL connection
+python-dotenv             # .env loading
+pandas                    # DataFrame display
+
+# OpenAI direct (no SAP Gen AI Hub needed)
+langchain~=0.3.25
+langchain-core~=0.3.25
+langchain-community~=0.3.25
+langchain-openai>=0.3.7   # ChatOpenAI + OpenAIEmbeddings
+
+# Document loaders (used by RAG tab)
+openpyxl>=3.1.0           # Excel
+pypdf>=3.0.0              # PDF
+beautifulsoup4            # HTML
+requests
