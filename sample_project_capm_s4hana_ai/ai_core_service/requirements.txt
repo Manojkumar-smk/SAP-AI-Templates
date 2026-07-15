@@ -1,0 +1,12 @@
+# Install: pip install -r requirements.txt
+
+fastapi==0.115.*
+uvicorn[standard]==0.30.*
+pydantic==2.*
+python-dotenv
+hdbcli==2.17.*
+
+sap-ai-sdk-gen[all]          # SAP Gen AI Hub proxy + Orchestration Service
+langchain~=0.3.25
+langchain-core~=0.3.25
+langchain-openai>=0.3.7

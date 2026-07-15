@@ -1,0 +1,78 @@
+# ============================================================
+# MTA (Multi-Target Application) — deploys the CAP side of the
+# project to Cloud Foundry: srv + approuter + UI5 app + HANA
+# HDI container + auth + the two destinations CAP calls out to.
+#
+# The Python ai_core_service/ is DELIBERATELY a separate `cf push`
+# (its own manifest.yml) — it's a different buildpack/runtime, so
+# it isn't bundled into this MTA. This mta.yaml's destination
+# resource is what "wires" the two apps together at runtime.
+#
+# Deploy: mbt build && cf deploy mta_archives/capm-middleware.mtar
+# ============================================================
+_schema-version: "3.1"
+ID: capm-middleware
+version: 1.0.0
+
+modules:
+  - name: capm-middleware-srv          # the CAP Node.js service (assistant-service.cds/js)
+    type: nodejs
+    path: gen/srv
+    requires:
+      - name: capm-middleware-db
+      - name: capm-middleware-auth
+      - name: capm-middleware-destination
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+
+  - name: capm-middleware-db-deployer   # deploys db/schema.cds (Conversation/Message/PostingLog) to HDI
+    type: hdb
+    path: gen/db
+    requires:
+      - name: capm-middleware-db
+
+  - name: capm-middleware-approuter     # single entry point: serves UI5, proxies /odata to srv, enforces auth
+    type: approuter.nodejs
+    path: app/router
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: capm-middleware-auth
+    provides:
+      - name: app-api
+
+resources:
+  - name: capm-middleware-db            # HANA HDI container — the actual persistence for Conversation/Message
+    type: com.sap.xs.hdi-container
+
+  - name: capm-middleware-auth          # XSUAA — auth for both approuter and srv
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+
+  - name: capm-middleware-destination   # the TWO outbound connections CAP makes — no URLs hardcoded in code
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+      config:
+        HTML5Runtime_enabled: true
+        init_data:
+          instance:
+            destinations:
+              - Name: ai-core-service-destination
+                URL: https://ai-core-service.cfapps.<region>.hana.ondemand.com   # route of the standalone Python app
+                Authentication: NoAuthentication          # replace with OAuth2ClientCredentials in production
+                ProxyType: Internet
+              - Name: s4hana-sales-api-destination
+                URL: https://<s4hana-host>/sap/opu/odata4/sap/api_salesorder/srvd/sap/salesorder/0001
+                Authentication: OAuth2ClientCredentials    # RAP OData services on S/4HANA Cloud are OAuth2-secured
+                ProxyType: Internet

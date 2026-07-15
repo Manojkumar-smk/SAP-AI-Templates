@@ -1,0 +1,18 @@
+<mvc:View
+    controllerName="assistant.ui.controller.App"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <Page title="AI Sales Assistant">
+        <content>
+            <List id="chatList" items="{path: 'messages'}">
+                <StandardListItem title="{role}" description="{content}" />
+            </List>
+        </content>
+        <footer>
+            <Toolbar>
+                <Input id="messageInput" placeholder="Ask a question or say: create a sales order for..." width="100%" />
+                <Button text="Send" type="Emphasized" press="onSend" />
+            </Toolbar>
+        </footer>
+    </Page>
+</mvc:View>

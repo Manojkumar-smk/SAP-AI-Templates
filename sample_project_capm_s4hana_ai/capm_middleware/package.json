@@ -1,0 +1,41 @@
+{
+  "name": "capm-middleware",
+  "description": "CAP middleware — orchestrates AI Core service + S/4HANA RAP posting + HANA persistence",
+  "version": "1.0.0",
+  "dependencies": {
+    "@sap/cds": "^7",
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "uuid": "^9",
+    "hdb": "^0.19"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^7"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana-cloud"
+      },
+      "auth": {
+        "kind": "xsuaa"
+      },
+      "AI_CORE_SERVICE": {
+        "kind": "rest",
+        "credentials": {
+          "destination": "ai-core-service-destination"
+        }
+      },
+      "S4HANA_SALES_API": {
+        "kind": "rest",
+        "credentials": {
+          "destination": "s4hana-sales-api-destination"
+        }
+      }
+    }
+  }
+}

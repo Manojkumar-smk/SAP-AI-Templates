@@ -1,0 +1,14 @@
+{
+  "xsappname": "capm-assistant",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    { "name": "$XSAPPNAME.User", "description": "Standard assistant user" }
+  ],
+  "role-templates": [
+    {
+      "name": "AssistantUser",
+      "description": "Can chat with the AI assistant",
+      "scope-references": ["$XSAPPNAME.User"]
+    }
+  ]
+}

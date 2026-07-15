@@ -1,0 +1,23 @@
+{
+  "_version": "1.60.0",
+  "sap.app": {
+    "id": "assistant.ui",
+    "type": "application",
+    "title": "AI Sales Assistant",
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/assistant/",
+        "type": "OData",
+        "settings": { "odataVersion": "4.0" }
+      }
+    }
+  },
+  "sap.ui5": {
+    "rootView": { "viewName": "assistant.ui.view.App", "type": "XML", "id": "app" },
+    "dependencies": { "minUI5Version": "1.120.0", "libs": { "sap.m": {}, "sap.ui.core": {} } },
+    "models": {
+      "i18n": { "type": "sap.ui.model.resource.ResourceModel", "settings": { "bundleName": "assistant.ui.i18n.i18n" } },
+      "": { "dataSource": "mainService", "preload": true }
+    }
+  }
+}

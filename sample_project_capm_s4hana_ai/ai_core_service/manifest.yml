@@ -1,0 +1,20 @@
+# Cloud Foundry deployment manifest for the AI Core Python service.
+# Deploy with: cf push -f manifest.yml
+# This app gets its OWN route — CAP calls it via a BTP Destination
+# pointing at this route (see capm_middleware/mta.yaml).
+
+applications:
+  - name: ai-core-service
+    memory: 512M
+    buildpacks:
+      - python_buildpack
+    command: uvicorn main:app --host 0.0.0.0 --port $PORT
+    instances: 1
+    env:
+      # AICORE_* credentials are normally bound automatically via a
+      # service instance (cf bind-service ai-core-service <aicore-instance>)
+      # rather than set here. Kept here only as a local-dev fallback reference.
+      AICORE_RESOURCE_GROUP: default
+    services:
+      - ai-core-service-key       # SAP AI Core service instance (provides AICORE_* creds)
+      - hana-service-key          # HANA Cloud service instance (provides HANA_* creds)
