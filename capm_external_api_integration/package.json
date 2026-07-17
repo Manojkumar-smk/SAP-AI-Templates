@@ -1,0 +1,76 @@
+{
+  "name": "capm-external-api-integration",
+  "version": "1.0.0",
+  "description": "CAP srv.js patterns for consuming external APIs: S/4HANA Sales Order (OData), a custom AI Python API on Cloud Foundry, SAP Integration Suite (CPI), SAP Build Process Automation (BPA), and n8n — all via BTP Destinations where applicable.",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^10",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^10",
+    "@cap-js/sqlite": "^3"
+  },
+  "scripts": {
+    "watch": "cds watch"
+  },
+  "engines": {
+    "node": "^20 || ^22"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": { "database": ":memory:" }
+      },
+
+      "API_SALES_ORDER_SRV": {
+        "kind": "odata",
+        "model": "srv/external/API_SALES_ORDER_SRV",
+        "credentials": {
+          "url": "https://sandbox.api.sap.com/s4hanacloud",
+          "path": "/sap/opu/odata/sap/API_SALES_ORDER_SRV"
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "S4HANA_SALES_ORDER",
+            "path": "/sap/opu/odata/sap/API_SALES_ORDER_SRV"
+          }
+        }
+      },
+
+      "AI_PYTHON_API": {
+        "kind": "rest",
+        "credentials": { "url": "http://localhost:8000", "path": "/api" },
+        "[production]": {
+          "credentials": { "destination": "ai-python-api-destination", "path": "/api" }
+        }
+      },
+
+      "CPI_API": {
+        "kind": "rest",
+        "credentials": { "url": "http://localhost:9000", "path": "/http/demo-iflow" },
+        "[production]": {
+          "credentials": { "destination": "cpi-destination", "path": "/http/demo-iflow" }
+        }
+      },
+
+      "BPA_API": {
+        "kind": "rest",
+        "credentials": { "url": "http://localhost:9100", "path": "/" },
+        "[production]": {
+          "credentials": { "destination": "bpa-destination", "path": "/" }
+        }
+      },
+
+      "N8N_API": {
+        "kind": "rest",
+        "credentials": { "url": "http://localhost:5678", "path": "/webhook" },
+        "[production]": {
+          "credentials": { "destination": "n8n-destination", "path": "/webhook" }
+        }
+      }
+    }
+  }
+}
