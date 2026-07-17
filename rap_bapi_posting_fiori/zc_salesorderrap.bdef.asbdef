@@ -1,0 +1,12 @@
+//============================================================
+// BEHAVIOR DEFINITION (projection layer)
+//============================================================
+projection;
+strict ( 2 );
+
+define behavior for zc_salesorderrap alias SalesOrderRap
+{
+  use create;
+  use action retryPosting;
+  use validation validateMandatoryData;
+}

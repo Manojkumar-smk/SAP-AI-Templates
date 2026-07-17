@@ -1,0 +1,90 @@
+//============================================================
+// BEHAVIOR DEFINITION (interface layer) — MANAGED WITH UNMANAGED
+// SAVE, the hybrid used to wrap a classic BAPI
+//============================================================
+// Use this when: the INTERACTION phase (buffering user input,
+// mandatory-field checks) is standard CRUD-shaped, but the actual
+// persistence target is NOT a table you control — it's a classic
+// BAPI (BAPI_SALESORDER_CREATEFROMDAT2), so the SAVE step must be
+// hand-written. "managed with unmanaged save" is the one-phrase
+// difference from ../rap_managed_fiori/'s plain "managed" — it
+// keeps the framework's auto-CRUD for everything EXCEPT the final
+// database commit, which you take over in zbp_i_salesorderrap.
+// clas.abap's save_modified method.
+//============================================================
+
+managed with unmanaged save implementation in class zbp_i_salesorderrap unique;
+strict ( 2 );
+
+define behavior for zi_salesorderrap alias SalesOrderRap
+persistent table ztsalesorderbuf
+lock master
+authorization master ( instance )
+etag master LocalLastChangedAt
+late numbering
+{
+  create;
+
+  field ( mandatory : create, readonly : update )
+    SoldToParty, SalesOrganization, DistributionChannel, Division, Material, OrderQuantity;
+  field ( readonly )
+    SalesOrder, OverallStatus, PostingMessage,
+    CreatedBy, CreatedAt, LastChangedBy, LastChangedAt;
+
+  validation validateMandatoryData on save { create; }
+
+  action ( features : instance ) retryPosting result [1] $self;
+
+  mapping for ztsalesorderbuf
+  {
+    SalesOrderRapUUID       = salesorderrap_uuid;
+    SalesOrder               = sales_order;
+    SoldToParty                = sold_to_party;
+    SalesOrganization            = sales_organization;
+    DistributionChannel            = distribution_channel;
+    Division                         = division;
+    PurchaseOrderByCustomer            = purchase_order_by_customer;
+    RequestedDeliveryDate                = requested_delivery_date;
+    Material                               = material;
+    OrderQuantity                            = order_quantity;
+    QuantityUnit                               = quantity_unit;
+    NetAmount                                    = net_amount;
+    Currency                                       = currency;
+    OverallStatus                                    = overall_status;
+    PostingMessage                                     = posting_message;
+    CreatedBy                                            = created_by;
+    CreatedAt                                              = created_at;
+    LastChangedBy                                            = last_changed_by;
+    LastChangedAt                                              = last_changed_at;
+    LocalLastChangedAt                                           = local_last_changed_at;
+  }
+}
+
+/*------------------------------------------------------------
+🎯 INTERVIEW POINTS
+------------------------------------------------------------
+Q: What does "late numbering;" actually change, mechanically?
+A: Without it, RAP assigns the entity's key (SalesOrderRapUUID)
+   IMMEDIATELY when CREATE is called, during the interaction phase
+   — fine for a UUID with no external dependency. "late numbering"
+   is about the same mechanic applying to any field the framework
+   needs to resolve BEFORE it can consider the create "final" — in
+   this template it's what allows the saver class to use
+   CONVERT KEY OF ... FROM <preliminary key> TO <final key> inside
+   save_modified, resolving the record's identity only once we
+   actually know it succeeded (or failed) against S/4. Practically,
+   it lets the Fiori draft's "temporary" row cleanly reconcile to
+   the framework once BAPI_SALESORDER_CREATEFROMDAT2 returns.
+
+Q: Why is there no "update" or "delete" here, only "create" and
+   one action?
+A: Deliberate business-process modeling: once a sales order is
+   submitted to S/4 via BAPI, editing it through THIS simplified
+   Z-buffer wouldn't reflect reality — a real change would need to
+   go through S/4's own change BAPI (BAPI_SALESORDER_CHANGE)
+   against the ALREADY-POSTED order, which is a different BO
+   entirely. The only "modification" this BO supports post-creation
+   is retryPosting, for the specific case where the first attempt
+   failed (OverallStatus = 'E') and you want to try again with the
+   same buffered data.
+------------------------------------------------------------*/

@@ -1,0 +1,72 @@
+"============================================================
+" PERSISTENT DB TABLE — transient "staging" buffer, NOT the
+" system of record
+"============================================================
+" Use this when: the REAL persistence for your RAP BO is an
+" external system reached via a classic BAPI (not a Z table you
+" own) — S/4HANA's Sales Order in this template's case, created
+" via BAPI_SALESORDER_CREATEFROMDAT2. RAP's "managed" interaction
+" phase still needs SOME real table to buffer the in-progress
+" instance against while the user is filling in the create form —
+" that's ALL this table is for. Once BAPI_SALESORDER_CREATEFROMDAT2
+" succeeds, the S/4 sales order document itself (VBAK/VBAP) is the
+" actual system of record; this table just remembers "we tried to
+" post this, here's the outcome" for UI/audit purposes.
+"============================================================
+
+@EndUserText.label : 'Sales Order Posting Buffer (RAP + BAPI Demo)'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ztsalesorderbuf {
+
+  key client                     : abap.clnt not null;
+  key salesorderrap_uuid         : sysuuid_x16 not null;
+      "-- our OWN technical key, generated the moment the user
+      "-- starts a new record — NOT the real SD document number.
+      sales_order                 : abap.char(10);
+      "-- ^ starts BLANK. Filled in during SAVE with the real
+      "-- number BAPI_SALESORDER_CREATEFROMDAT2 returns — this is
+      "-- what "late numbering" in the behavior definition is for.
+      sold_to_party                : abap.char(10);
+      sales_organization            : abap.char(4);
+      distribution_channel           : abap.char(2);
+      division                       : abap.char(2);
+      purchase_order_by_customer      : abap.char(20);
+      requested_delivery_date          : abap.dats;
+      material                          : abap.char(18);
+      order_quantity                     : abap.quan(13,3);
+      quantity_unit                       : abap.unit(3);
+      net_amount                           : abap.curr(15,2);
+      currency                              : abap.cuky(5);
+      overall_status                         : abap.char(1);
+      "-- ' ' = not yet posted, 'A' = posted to S/4 successfully,
+      "-- 'E' = BAPI returned an error (see posting_message)
+      posting_message                         : abap.char(220);
+      created_by                               : abp_creation_user;
+      created_at                                : abp_creation_tstmpl;
+      last_changed_by                            : abp_locinst_lastchange_user;
+      last_changed_at                             : abp_locinst_lastchange_tstmpl;
+      local_last_changed_at                        : abp_lastchange_tstmpl;
+
+}
+
+*----------------------------------------------------------------
+* INTERVIEW POINTS
+*----------------------------------------------------------------
+* Q: Why not just make this an UNMANAGED BO instead — isn't calling
+*    a BAPI from a hand-written SAVE method exactly what
+*    ../rap_unmanaged_fiori/ already demonstrates?
+* A: You COULD do it either way. "Managed with unmanaged save" is
+*    preferred here specifically because the INTERACTION phase
+*    (the part the user experiences while filling in the create
+*    form — field defaults, mandatory-field checks, buffering
+*    partial input across several PATCH requests in a Fiori draft)
+*    is genuinely standard CRUD-shaped and benefits from the
+*    framework handling it for free. Only the SAVE step is special
+*    (calls a BAPI instead of SQL) — so only THAT one piece is
+*    hand-written, via "with unmanaged save" tacked onto an
+*    otherwise normal managed BDEF. Pure "unmanaged" would mean
+*    hand-writing the interaction phase too, for no benefit.
+*----------------------------------------------------------------

@@ -1,0 +1,61 @@
+//============================================================
+// METADATA EXTENSION — Fiori elements UI annotations
+//============================================================
+@Metadata.layer: #CORE
+annotate entity zc_salesorderrap with
+{
+  @UI.facet: [
+    { id: 'Order',  purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Order Data', position: 10 },
+    { id: 'Status', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, targetQualifier: 'status', label: 'Posting Status', position: 20 }
+  ]
+
+  @UI: { lineItem: [ { position: 10 } ], identification: [ { position: 10 } ] }
+  SalesOrder;
+
+  @UI: { lineItem: [ { position: 20 } ], identification: [ { position: 20 } ], selectionField: [ { position: 10 } ] }
+  SoldToParty;
+
+  @UI: { identification: [ { position: 30 } ], selectionField: [ { position: 20 } ] }
+  SalesOrganization;
+
+  @UI: { identification: [ { position: 40 } ] }
+  DistributionChannel;
+
+  @UI: { identification: [ { position: 50 } ] }
+  Division;
+
+  @UI: { identification: [ { position: 60 } ] }
+  PurchaseOrderByCustomer;
+
+  @UI: { identification: [ { position: 70 } ] }
+  RequestedDeliveryDate;
+
+  @UI: { lineItem: [ { position: 30 } ], identification: [ { position: 80 } ] }
+  Material;
+
+  @UI: { identification: [ { position: 90 } ] }
+  OrderQuantity;
+
+  QuantityUnit;
+
+  @UI: { lineItem: [ { position: 40 } ], identification: [ { position: 100 } ] }
+  NetAmount;
+
+  Currency;
+
+  @UI: {
+    lineItem:  [ { position: 50, criticality: 'OverallStatusCriticality' } ],
+    fieldGroup: [ { qualifier: 'status', position: 10 } ]
+  }
+  OverallStatus;
+
+  @UI: { fieldGroup: [ { qualifier: 'status', position: 20 } ] }
+  PostingMessage;
+
+  // -- "Retry Posting" button — wired to the action declared in
+  // -- zc_salesorderrap.bdef.asbdef, relevant only when a previous
+  // -- BAPI attempt failed (OverallStatus = 'E') --
+  @UI.lineItem:       [ { type: #FOR_ACTION, dataAction: 'retryPosting', label: 'Retry Posting', position: 60 } ]
+  @UI.identification: [ { type: #FOR_ACTION, dataAction: 'retryPosting', label: 'Retry Posting', position: 110 } ]
+  SalesOrderRapUUID;
+}

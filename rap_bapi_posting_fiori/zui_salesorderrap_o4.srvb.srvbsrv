@@ -1,0 +1,13 @@
+//============================================================
+// SERVICE BINDING — created via ADT wizard, not hand-written
+//============================================================
+//   1. Right-click zui_salesorderrap.srvd.srvdsrv → New → Service Binding
+//   2. Name: ZUI_SALESORDERRAP_O4    Binding type: OData V4 - UI
+//   3. Service Definition: ZUI_SALESORDERRAP
+//   4. Publish, then Preview. Test creating a row with valid
+//      SoldToParty/SalesOrganization/DistributionChannel/Division/
+//      Material values that exist in your S/4 system — invalid
+//      master data will surface as OverallStatus = 'E' with the
+//      BAPI's own error text in PostingMessage, exactly as a real
+//      BAPI_SALESORDER_CREATEFROMDAT2 caller would see it.
+//============================================================
