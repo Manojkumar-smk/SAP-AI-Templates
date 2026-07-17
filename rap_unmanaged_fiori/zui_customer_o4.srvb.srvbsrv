@@ -1,0 +1,10 @@
+//============================================================
+// SERVICE BINDING — created via ADT wizard, not hand-written
+//============================================================
+// Same procedure as ../rap_managed_fiori/zui_product_o4.srvb.srvbsrv:
+//   1. Right-click zui_customer.srvd.srvdsrv → New → Service Binding
+//   2. Name: ZUI_CUSTOMER_O4    Binding type: OData V4 - UI
+//   3. Service Definition: ZUI_CUSTOMER
+//   4. Publish, then Preview to launch the generic Fiori elements
+//      List Report / Object Page against it.
+//============================================================

@@ -1,0 +1,52 @@
+"============================================================
+" PERSISTENT DB TABLE — backing store for the UNMANAGED RAP BO
+"============================================================
+" Use this when: contrast this file with
+" ../rap_managed_fiori/ztproduct.tabl.astabl — the TABLE shape
+" itself is unremarkable (same style of UUID + business key). The
+" difference between managed and unmanaged is NEVER in the table —
+" it's entirely in the Behavior Definition keyword and the
+" implementation class. This table exists purely as somewhere for
+" our HAND-WRITTEN SQL (in zbp_i_customer.clas.abap's saver class)
+" to write to.
+"============================================================
+
+@EndUserText.label : 'Customer Master (RAP Unmanaged Demo)'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ztcustomer {
+
+  key client               : abap.clnt not null;
+  key customer_uuid        : sysuuid_x16 not null;
+      customer_id           : abap.char(10) not null;
+      customer_name         : abap.char(60);
+      customer_email        : abap.char(80);
+      customer_phone        : abap.char(20);
+      credit_limit          : abap.curr(15,2);
+      currency              : abap.cuky(5);
+      is_blocked             : abap_boolean;
+      created_by             : abp_creation_user;
+      created_at             : abp_creation_tstmpl;
+      last_changed_by        : abp_locinst_lastchange_user;
+      last_changed_at        : abp_locinst_lastchange_tstmpl;
+      local_last_changed_at  : abp_lastchange_tstmpl;
+
+}
+
+*----------------------------------------------------------------
+* INTERVIEW POINTS
+*----------------------------------------------------------------
+* Q: If the table looks identical in shape to the managed template's
+*    table, what actually forces THIS BO to be unmanaged?
+* A: Nothing about the table forces it — the choice of "unmanaged"
+*    vs "managed" is made in the Behavior Definition, not the data
+*    model. You'd choose unmanaged for THIS same table if you had
+*    a reason the framework's auto-generated SQL wasn't good enough
+*    — e.g. you need to write to a SECOND table in the same save
+*    (an audit-log insert alongside the customer update), enforce
+*    row-level logic too complex for a "validation", or integrate
+*    with existing hand-written business logic you don't want to
+*    reimplement as a determination/validation.
+*----------------------------------------------------------------

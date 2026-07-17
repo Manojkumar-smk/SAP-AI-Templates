@@ -1,0 +1,56 @@
+//============================================================
+// BEHAVIOR DEFINITION (interface layer) — UNMANAGED implementation
+//============================================================
+// Use this when: you need full hand-written control over every
+// CRUD operation. Notice what's ABSENT compared to
+// ../rap_managed_fiori/zi_product.bdef.asbdef: no
+// "persistent table" clause, no "mapping for" block — those are
+// MANAGED-only constructs, because there's no framework-generated
+// SQL here for them to configure. Also notice "lock master" and
+// "authorization master" are declared just like the managed
+// template — locking and authorization work the SAME WAY
+// regardless of implementation type; only CRUD persistence differs.
+//============================================================
+
+unmanaged implementation in class zbp_i_customer unique;
+strict ( 2 );
+
+define behavior for zi_customer alias Customer
+lock master
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( mandatory : create, readonly : update ) CustomerID;
+  field ( readonly ) CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  validation validateEmail on save { create; field CustomerEmail; }
+}
+
+/*------------------------------------------------------------
+🎯 INTERVIEW POINTS
+------------------------------------------------------------
+Q: Why does "unmanaged" still support "validation" — isn't that a
+   managed-only convenience?
+A: No — validations, determinations, and actions are available
+   under BOTH implementation types identically. What "managed" vs
+   "unmanaged" controls is ONLY who writes the CREATE/UPDATE/DELETE
+   persistence SQL (framework vs. you, in the saver class's SAVE
+   method). Everything else in the RAP programming model —
+   validations, determinations, actions, authorization, locking,
+   ETags — works the same regardless.
+
+Q: What EXACTLY changes in the implementation class because this
+   says "unmanaged" instead of "managed"?
+A: In the handler class (lhc_customer), the create/update/delete
+   FOR MODIFY methods must now populate a manual buffer (rather
+   than doing nothing, as in the managed template) — see
+   zbp_i_customer.clas.abap's CLASS-DATA gt_create/gt_update/
+   gt_delete. In the saver class (lsc_customer), the SAVE method
+   must contain REAL INSERT/UPDATE/DELETE statements flushing that
+   buffer to ztcustomer — versus the managed template's completely
+   empty SAVE method.
+------------------------------------------------------------*/
