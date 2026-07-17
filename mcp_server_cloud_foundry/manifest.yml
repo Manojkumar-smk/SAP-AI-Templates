@@ -1,0 +1,29 @@
+# ============================================================
+# Cloud Foundry deployment manifest
+# ============================================================
+# `cf push` reads this file automatically from the current
+# directory — no extra flags needed if you run it from here.
+#
+# Deploys mcp_server_secured.py (auth ON) by default. To deploy
+# the unsecured lab version instead, change `command:` below to
+# "python mcp_server_http.py" — but see USER_MANUAL.md's warning
+# about doing that anywhere reachable outside a private CF space.
+# ============================================================
+
+applications:
+  - name: sap-demo-mcp-server
+    memory: 256M              # FastMCP + a few dict-backed tools is light;
+    disk_quota: 512M          # bump both if you add heavier dependencies
+    instances: 1              # see USER_MANUAL.md re: stateless_http before scaling this
+    buildpack: python_buildpack
+    command: python mcp_server_secured.py
+    # Cloud Foundry sets $PORT automatically at container start —
+    # mcp_server_secured.py reads it via os.environ["PORT"].
+    # Do NOT set PORT yourself here; CF owns that value.
+    env:
+      # Non-secret config can live here. Secrets (XSUAA client
+      # credentials, etc.) should come from a bound service
+      # instance or `cf set-env`, NOT committed to this file.
+      MCP_REQUIRED_SCOPE: ""   # set to e.g. "mcp-server!t1234.Invoke" once you have real scopes
+    health-check-type: http
+    health-check-http-endpoint: /health   # matches the /health custom_route in the server files

@@ -1,0 +1,7 @@
+# Core MCP server/client framework — handles protocol, schema
+# generation, transports (stdio + Streamable HTTP), and auth providers.
+fastmcp>=2.14
+
+# .env file loading for local development (mcp_auth_jwt.py / manifest
+# env vars replace this in the deployed Cloud Foundry environment).
+python-dotenv>=1.0
