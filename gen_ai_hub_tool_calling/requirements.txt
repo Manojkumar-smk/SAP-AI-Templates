@@ -1,0 +1,10 @@
+# IMPORTANT: install the [all] extra, not the bare package.
+# gen_ai_hub.proxy.langchain eagerly imports its Amazon (Bedrock)
+# and Google (GenAI) integrations at package-import time, even
+# though this template only uses the OpenAI-backed ChatOpenAI
+# class — without [all] you'll hit a ModuleNotFoundError for
+# botocore/google-genai the moment llm_setup.py is imported.
+# Verified against sap-ai-sdk-gen 6.10.0.
+sap-ai-sdk-gen[all]>=6.10
+
+python-dotenv>=1.0
