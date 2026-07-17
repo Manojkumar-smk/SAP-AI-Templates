@@ -1,0 +1,74 @@
+<core:FragmentDefinition
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  xmlns:form="sap.ui.layout.form">
+  <!--
+  ============================================================
+  CREATE DIALOG — bound to a throwaway JSONModel "newTask", NOT the
+  OData model directly
+  ============================================================
+  Use this when: collecting new-entity input in a dialog BEFORE
+  deciding to actually create it. Binding straight to a
+  provisional OData v4 created-but-not-yet-submitted entity is
+  possible but adds complexity (transient contexts, cleanup on
+  cancel) that isn't worth it for a simple create form — a plain
+  JSONModel scratch object, only turned into a real OData create()
+  call on confirm (see TaskList.controller.js's
+  onCreateTaskConfirm), is the simpler, more common freestyle
+  pattern for this case.
+  ============================================================
+  -->
+  <Dialog id="createTaskDialog" title="{i18n>createDialogTitle}" contentWidth="28rem">
+    <content>
+      <form:Form editable="true">
+        <form:layout>
+          <form:ColumnLayout columnsM="1" columnsL="1" columnsXL="1" />
+        </form:layout>
+        <form:formContainers>
+          <form:FormContainer>
+            <form:formElements>
+              <form:FormElement label="{i18n>colTitle}">
+                <form:fields>
+                  <Input id="newTaskTitleInput" value="{newTask>/title}" required="true" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colDescription}">
+                <form:fields>
+                  <TextArea value="{newTask>/description}" rows="2" width="100%" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colPriority}">
+                <form:fields>
+                  <Select selectedKey="{newTask>/priority}">
+                    <core:Item key="Low" text="{i18n>priorityLow}" />
+                    <core:Item key="Medium" text="{i18n>priorityMedium}" />
+                    <core:Item key="High" text="{i18n>priorityHigh}" />
+                  </Select>
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colDueDate}">
+                <form:fields>
+                  <DatePicker
+                    value="{newTask>/dueDate}"
+                    valueFormat="yyyy-MM-dd"
+                    displayFormat="medium" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colAssignee}">
+                <form:fields>
+                  <Input value="{newTask>/assignee}" />
+                </form:fields>
+              </form:FormElement>
+            </form:formElements>
+          </form:FormContainer>
+        </form:formContainers>
+      </form:Form>
+    </content>
+    <beginButton>
+      <Button text="{i18n>createButton}" type="Emphasized" press=".onCreateTaskConfirm" />
+    </beginButton>
+    <endButton>
+      <Button text="{i18n>cancelButton}" press=".onCreateTaskCancel" />
+    </endButton>
+  </Dialog>
+</core:FragmentDefinition>

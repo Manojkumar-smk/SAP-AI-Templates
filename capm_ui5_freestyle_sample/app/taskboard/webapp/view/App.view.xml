@@ -1,0 +1,20 @@
+<mvc:View
+  controllerName="sap.capire.taskboard.ui.controller.App"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  displayBlock="true">
+  <!--
+  ============================================================
+  APP SHELL — the single sap.m.App instance the router targets
+  ============================================================
+  This is deliberately the ONLY control in the whole app that is
+  never re-created — manifest.json's routing config points
+  "controlId": "app" + "controlAggregation": "pages" here, and every
+  route's target view gets pushed into ITS "pages" aggregation as
+  the user navigates. Nothing business-specific belongs in this
+  view; see TaskList.view.xml / TaskDetail.view.xml for the actual
+  screens.
+  ============================================================
+  -->
+  <App id="app" busy="{appView>/busy}" busyIndicatorDelay="{appView>/delay}" />
+</mvc:View>

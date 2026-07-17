@@ -1,0 +1,29 @@
+{
+  "name": "capm-ui5-freestyle-sample",
+  "version": "1.0.0",
+  "description": "CAPM backend + freestyle SAPUI5 frontend template (Task Board)",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^10",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^3",
+    "@sap/cds-dk": "^8",
+    "cds-plugin-ui5": "^0.17"
+  },
+  "scripts": {
+    "start": "cds watch",
+    "watch": "cds watch"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sqlite",
+        "credentials": { "url": "db.sqlite" }
+      }
+    }
+  }
+}

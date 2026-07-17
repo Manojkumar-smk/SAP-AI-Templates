@@ -1,0 +1,44 @@
+<!--
+============================================================
+INDEX.HTML — declarative component bootstrap, no inline script
+============================================================
+Use this when: bootstrapping a freestyle UI5 app. Per SAPUI5
+guidelines, initialization goes through `sap/ui/core/ComponentSupport`
+declaratively (via `data-sap-ui-on-init` + a `data-sap-ui-component`
+div) — NOT a hand-written `<script>sap.ui.getCore().attachInit(...)`
+block, which is the older pattern you'll still see in older
+tutorials but should not use in new code.
+
+Bootstrap source points at the public UI5 CDN for simplicity in this
+template. `cds-plugin-ui5` (wired up in ../../package.json) serves
+THIS app's own files (index.html, Component.js, views, ...) — it
+does not need to also serve the UI5 framework runtime itself.
+============================================================
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Board</title>
+  <script
+    id="sap-ui-bootstrap"
+    src="https://ui5.sap.com/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-resource-roots='{ "sap.capire.taskboard.ui": "./" }'
+    data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+    data-sap-ui-compat-version="edge"
+    data-sap-ui-async="true"
+    data-sap-ui-frame-options="trusted">
+  </script>
+</head>
+<body class="sapUiBody" id="content">
+  <div
+    data-sap-ui-component
+    data-name="sap.capire.taskboard.ui"
+    data-id="taskboard"
+    data-settings='{ "id" : "taskboard" }'
+    data-handle-validation="true">
+  </div>
+</body>
+</html>

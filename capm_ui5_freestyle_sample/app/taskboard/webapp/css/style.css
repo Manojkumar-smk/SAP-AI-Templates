@@ -1,0 +1,7 @@
+/* Deliberately minimal — freestyle UI5 apps should lean on theme
+   parameters (sap_horizon etc.) rather than hard-coded styling.
+   Add app-specific overrides here as needed. */
+
+.sapMPage {
+  background-color: var(--sapBackgroundColor);
+}

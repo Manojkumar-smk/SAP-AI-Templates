@@ -1,0 +1,101 @@
+<mvc:View
+  controllerName="sap.capire.taskboard.ui.controller.TaskDetail"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:form="sap.ui.layout.form"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+  <Page id="taskDetailPage" title="{i18n>detailPageTitle}" showNavButton="true" navButtonPress=".onNavBack">
+    <headerContent>
+      <Button
+        text="{i18n>completeButton}"
+        icon="sap-icon://complete"
+        enabled="{= ${status} !== 'Done' }"
+        press=".onComplete" />
+      <Button
+        text="{i18n>deleteButton}"
+        icon="sap-icon://delete"
+        type="Reject"
+        press=".onDelete" />
+    </headerContent>
+    <content>
+      <!--
+      ============================================================
+      sap.ui.layout.form.Form + ColumnLayout — per SAPUI5
+      guidelines, the required choice over SimpleForm for any form
+      not explicitly requested otherwise. columnsL/XL give more
+      columns on wider screens; labelCellsLarge widens labels so
+      they don't wrap awkwardly at the M breakpoint.
+      ============================================================
+      -->
+      <form:Form editable="true">
+        <form:layout>
+          <form:ColumnLayout columnsM="2" columnsL="3" columnsXL="4" labelCellsLarge="4" />
+        </form:layout>
+        <form:formContainers>
+          <form:FormContainer title="{i18n>taskDetailsSectionTitle}">
+            <form:formElements>
+              <form:FormElement label="{i18n>colTitle}">
+                <form:fields>
+                  <Input value="{title}" required="true" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colDescription}">
+                <form:fields>
+                  <TextArea value="{description}" rows="3" width="100%" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colStatus}">
+                <form:fields>
+                  <Select selectedKey="{status}">
+                    <core:Item key="Open" text="{i18n>statusOpen}" />
+                    <core:Item key="In Progress" text="{i18n>statusInProgress}" />
+                    <core:Item key="Done" text="{i18n>statusDone}" />
+                  </Select>
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colPriority}">
+                <form:fields>
+                  <Select selectedKey="{priority}">
+                    <core:Item key="Low" text="{i18n>priorityLow}" />
+                    <core:Item key="Medium" text="{i18n>priorityMedium}" />
+                    <core:Item key="High" text="{i18n>priorityHigh}" />
+                  </Select>
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colDueDate}">
+                <form:fields>
+                  <DatePicker
+                    core:require="{ ODataDate: 'sap/ui/model/odata/type/Date' }"
+                    value="{
+                      path: 'dueDate',
+                      type: 'ODataDate'
+                    }" />
+                </form:fields>
+              </form:FormElement>
+              <form:FormElement label="{i18n>colAssignee}">
+                <form:fields>
+                  <Input value="{assignee}" />
+                </form:fields>
+              </form:FormElement>
+            </form:formElements>
+          </form:FormContainer>
+        </form:formContainers>
+      </form:Form>
+    </content>
+    <footer>
+      <!--
+      "Manual save" pattern: the "" model's groupProperties in
+      manifest.json marks "taskDetailGroup" as submit:"API", which
+      means changes bound with $$updateGroupId:"taskDetailGroup"
+      (see TaskDetail.controller.js's _onPatternMatched) are held
+      client-side until this Save button calls submitBatch().
+      -->
+      <Toolbar>
+        <ToolbarSpacer />
+        <Button text="{i18n>saveButton}" type="Emphasized" press=".onSave" />
+        <Button text="{i18n>cancelButton}" press=".onCancel" />
+      </Toolbar>
+    </footer>
+  </Page>
+</mvc:View>

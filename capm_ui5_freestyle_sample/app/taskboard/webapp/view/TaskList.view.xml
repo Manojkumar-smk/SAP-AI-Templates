@@ -1,0 +1,81 @@
+<mvc:View
+  controllerName="sap.capire.taskboard.ui.controller.TaskList"
+  xmlns:mvc="sap.ui.core.mvc"
+  xmlns="sap.m"
+  xmlns:core="sap.ui.core"
+  displayBlock="true">
+  <Page id="taskListPage" title="{i18n>listPageTitle}">
+    <headerContent>
+      <Button icon="sap-icon://add" text="{i18n>createTaskButton}" press=".onCreateTask" />
+    </headerContent>
+    <subHeader>
+      <Toolbar>
+        <SearchField id="searchField" width="20rem" search=".onSearch" placeholder="{i18n>searchPlaceholder}" />
+        <ToolbarSpacer />
+        <Button icon="sap-icon://refresh" tooltip="{i18n>refreshTooltip}" press=".onRefresh" />
+        <Button icon="sap-icon://action" text="{i18n>resetDemoDataButton}" press=".onResetDemoData" />
+      </Toolbar>
+    </subHeader>
+    <content>
+      <!--
+      ============================================================
+      TABLE bound DIRECTLY to the OData v4 collection "/Tasks" — no
+      $expand/annotation-driven columns like a Fiori elements List
+      Report would have (compare ../capm_fiori_hana_sample/), every
+      column below is hand-authored.
+      ============================================================
+      -->
+      <Table
+        id="taskTable"
+        items="{
+          path: '/Tasks',
+          sorter: { path: 'dueDate', descending: false }
+        }"
+        growing="true"
+        growingScrollToLoad="true"
+        noDataText="{i18n>noTasksText}">
+        <headerToolbar>
+          <Toolbar>
+            <Title text="{i18n>tasksTableTitle}" level="H2" />
+          </Toolbar>
+        </headerToolbar>
+        <columns>
+          <Column><Text text="{i18n>colTitle}" /></Column>
+          <Column><Text text="{i18n>colStatus}" /></Column>
+          <Column><Text text="{i18n>colPriority}" /></Column>
+          <Column hAlign="End"><Text text="{i18n>colDueDate}" /></Column>
+          <Column><Text text="{i18n>colAssignee}" /></Column>
+        </columns>
+        <items>
+          <ColumnListItem type="Navigation" press=".onTaskPress">
+            <cells>
+              <ObjectIdentifier title="{title}" />
+              <!--
+              core:require is how a formatter MODULE gets loaded for
+              use in a binding expression, per SAPUI5 guidelines — the
+              alias "Formatter" below is then referenced as
+              "Formatter.statusState" in the binding, NOT as a global.
+              -->
+              <ObjectStatus
+                core:require="{ Formatter: 'sap/capire/taskboard/ui/model/formatter' }"
+                text="{status}"
+                state="{ path: 'status', formatter: 'Formatter.statusState' }" />
+              <ObjectStatus
+                core:require="{ Formatter: 'sap/capire/taskboard/ui/model/formatter' }"
+                text="{priority}"
+                state="{ path: 'priority', formatter: 'Formatter.priorityState' }" />
+              <Text
+                core:require="{ ODataDate: 'sap/ui/model/odata/type/Date' }"
+                text="{
+                  path: 'dueDate',
+                  type: 'ODataDate',
+                  formatOptions: { style: 'medium' }
+                }" />
+              <Text text="{assignee}" />
+            </cells>
+          </ColumnListItem>
+        </items>
+      </Table>
+    </content>
+  </Page>
+</mvc:View>

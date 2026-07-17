@@ -1,0 +1,6 @@
+ID,title,description,status,priority,dueDate,assignee,createdBy,modifiedBy
+6a7a37c4-1c1a-4e1a-9c1a-000000000001,Design onboarding flow,Sketch the new-user onboarding screens,In Progress,High,2026-08-01,alice,alice,alice
+6a7a37c4-1c1a-4e1a-9c1a-000000000002,Fix login timeout bug,Session expires too early on mobile Safari,Open,High,2026-07-25,bob,alice,alice
+6a7a37c4-1c1a-4e1a-9c1a-000000000003,Write API documentation,Document the new TaskService actions,Open,Medium,2026-08-10,carol,alice,alice
+6a7a37c4-1c1a-4e1a-9c1a-000000000004,Update dependency versions,Bump @sap/cds and UI5 framework versions,Done,Low,2026-07-10,bob,alice,alice
+6a7a37c4-1c1a-4e1a-9c1a-000000000005,Prepare demo for stakeholders,Walkthrough of the freestyle UI5 task board,In Progress,Medium,2026-07-20,carol,alice,alice
