@@ -1,0 +1,77 @@
+{
+  "_version": "1.59.0",
+  "_comment": "This is the standard structure `cds add fiori-elements` / SAP Fiori tools generates for a List-Report + Object-Page app. Written by hand here for readability — if you scaffold a real app, let the CLI generate this file and treat this as a reference for what each section means, not a copy-paste target.",
+
+  "sap.app": {
+    "id": "salesorders",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": { "version": "1.0.0" },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "dataSources": {
+      "mainService": {
+        "uri": "/sales/",
+        "type": "OData",
+        "settings": { "odataVersion": "4.0" }
+      }
+    }
+  },
+
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.fe.templates": {}
+      }
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": { "bundleName": "salesorders.i18n.i18n" }
+      },
+      "": {
+        "dataSource": "mainService",
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+
+    "routing": {
+      "routes": [
+        { "pattern": ":?query:", "name": "SalesOrdersList", "target": "SalesOrdersList" },
+        { "pattern": "SalesOrders({key}):?query:", "name": "SalesOrdersObjectPage", "target": "SalesOrdersObjectPage" }
+      ],
+      "targets": {
+        "SalesOrdersList": {
+          "type": "Component",
+          "id": "SalesOrdersList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "entitySet": "SalesOrders",
+              "variantManagement": "Page",
+              "navigation": {
+                "SalesOrders": {
+                  "detail": { "route": "SalesOrdersObjectPage" }
+                }
+              }
+            }
+          }
+        },
+        "SalesOrdersObjectPage": {
+          "type": "Component",
+          "id": "SalesOrdersObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": { "entitySet": "SalesOrders" }
+          }
+        }
+      }
+    }
+  }
+}

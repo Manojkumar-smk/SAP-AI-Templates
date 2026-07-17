@@ -1,0 +1,32 @@
+<!--
+  Sandbox test page — for local `cds watch` testing only, NOT used in a
+  real Cloud Foundry / HTML5 Application Repository deployment (there,
+  the Fiori Launchpad loads the app instead of this file). Standard
+  UI5 "flexible application" bootstrap, unmodified from the pattern
+  `cds add fiori-elements` generates.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sales Orders</title>
+  <script
+    id="sap-ui-bootstrap"
+    src="https://ui5.sap.com/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-resourceroots='{"salesorders": "./"}'
+    data-sap-ui-compatVersion="edge"
+    data-sap-ui-async="true"
+    data-sap-ui-frameOptions="trusted"
+    data-sap-ui-oninit="module:sap/ui/core/ComponentSupport">
+  </script>
+</head>
+<body class="sapUiBody" id="content">
+  <div
+    data-sap-ui-component
+    data-name="salesorders"
+    data-id="container"
+    data-settings='{"id" : "salesorders"}'>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2 @@
+ID,orderNo,customer_ID,status,orderDate,totalAmount,currency_code
+o1,SO-0001,c1,NEW,2026-07-01,0,USD

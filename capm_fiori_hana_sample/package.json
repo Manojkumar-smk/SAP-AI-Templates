@@ -1,0 +1,47 @@
+{
+  "name": "capm-fiori-hana-sample",
+  "version": "1.0.0",
+  "description": "CAPM + Fiori elements (annotations-driven UI) + SAP HANA Cloud sample — Sales Order management",
+  "repository": "<add-your-repo-url>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^10",
+    "express": "^4"
+  },
+  "devDependencies": {
+    "@sap/cds-dk": "^10",
+    "@cap-js/sqlite": "^3"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch",
+    "build": "cds build --production",
+    "deploy": "cf deploy mta_archives/*.mtar"
+  },
+  "engines": {
+    "node": "^20 || ^22"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "sql",
+        "[production]": {
+          "kind": "hana",
+          "deploy-format": "hdbtable"
+        },
+        "[development]": {
+          "kind": "sqlite",
+          "credentials": { "database": "db.sqlite" }
+        }
+      },
+      "auth": {
+        "[production]": { "kind": "xsuaa" },
+        "[development]": { "kind": "mocked" }
+      }
+    },
+    "fiori": {
+      "preview": true
+    }
+  }
+}

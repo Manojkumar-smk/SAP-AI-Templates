@@ -1,0 +1,22 @@
+{
+  "xsappname": "capm-fiori-hana-sample",
+  "tenant-mode": "dedicated",
+  "description": "Security profile for the CAPM Fiori HANA Cloud sample",
+  "scopes": [
+    { "name": "$XSAPPNAME.SalesUser",  "description": "Read/manage sales orders" },
+    { "name": "$XSAPPNAME.SalesAdmin", "description": "Full access incl. cancel on any order" }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "SalesUser",
+      "description": "Sales order operator",
+      "scope-references": ["$XSAPPNAME.SalesUser"]
+    },
+    {
+      "name": "SalesAdmin",
+      "description": "Sales order administrator",
+      "scope-references": ["$XSAPPNAME.SalesUser", "$XSAPPNAME.SalesAdmin"]
+    }
+  ]
+}
